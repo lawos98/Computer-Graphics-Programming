@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+ <html lang="">
+     <head>
+         <title>Spólnik Jakub</title>
+         <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+         <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
+         <style type="text/css">
+             body {
+                 background-color: #000000;
+                 overflow: hidden;
+             }
+         </style>
+         <script src="three.js"></script>
+         <script src="Detector.js"></script>
+     </head>
+     <body>
+         <div id="WebGLCanvas"> </div>
+         <script>
+           let scene;
+           let camera;
+           let triangleMesh;
+           let squareMesh;
+           let pineMesh1;
+           let pineMesh2;
+           let pineMesh3;
+           let woodMesh;
+           let wheelMesh1;
+           let wheelMesh2;
+           let wheelMesh3;
+           let wheelMesh4;
+           let carMesh;
+           let i=0
+
+           initializeScene();
+
+           animateScene();
+
+           function initializeScene(){
+
+               if(Detector.webgl){
+                   renderer = new THREE.WebGLRenderer({antialias:true});
+
+               } else {
+                   renderer = new THREE.CanvasRenderer();
+               }
+
+               renderer.setClearColor(0x11AA22, 1);
+
+               const canvasWidth = window.innerWidth;
+               const canvasHeight = window.innerHeight;
+
+               renderer.setSize(canvasWidth, canvasHeight);
+
+               document.getElementById("WebGLCanvas").appendChild(renderer.domElement);
+
+               scene = new THREE.Scene();
+
+               camera = new THREE.PerspectiveCamera(45, canvasWidth / canvasHeight, 1, 100);
+               camera.position.set(0, 0, 10);
+               camera.lookAt(scene.position);
+               scene.add(camera);
+
+               let light = new THREE.AmbientLight(0xffffff, 0.5);
+               scene.add(light);
+
+               let light2 = new THREE.PointLight(0xffffff, 0.5);
+               scene.add(light2);
+
+
+               let NormalMaterial= new THREE.MeshBasicMaterial({
+                   vertexColors:THREE.VertexColors
+               });
+
+               let PineGeometry = new THREE.Geometry();
+               PineGeometry.vertices.push(new THREE.Vector3(0,  1, 0.0));
+               PineGeometry.vertices.push(new THREE.Vector3(-1.5,  0.0, 0.0));
+               PineGeometry.vertices.push(new THREE.Vector3(1.5,  0.0, 0.0));
+               PineGeometry.faces.push(new THREE.Face3(0, 1, 2));
+               PineGeometry.faces[0].vertexColors[0]=new THREE.Color(0x248714);
+               PineGeometry.faces[0].vertexColors[1]=new THREE.Color(0x379829);
+               PineGeometry.faces[0].vertexColors[2]=new THREE.Color(0x266F1B);
+
+               pineMesh1=new THREE.Mesh(PineGeometry, NormalMaterial);
+               pineMesh2=new THREE.Mesh(PineGeometry, NormalMaterial);
+               pineMesh3=new THREE.Mesh(PineGeometry, NormalMaterial);
+               pineMesh1.position.set(3,1.5,0);
+               pineMesh2.position.set(3,0.7,0);
+               pineMesh3.position.set(3,-0.1,0);
+               scene.add(pineMesh1);
+               scene.add(pineMesh2);
+               scene.add(pineMesh3);
+
+               let WoodGeometry = new THREE.Geometry();
+               WoodGeometry.vertices.push(new THREE.Vector3(0,  0, 0.0));
+               WoodGeometry.vertices.push(new THREE.Vector3(0.5,  0.0, 0.0));
+               WoodGeometry.vertices.push(new THREE.Vector3(0.5,  1.0, 0.0));
+               WoodGeometry.vertices.push(new THREE.Vector3(0,1,0));
+               WoodGeometry.faces.push(new THREE.Face3(0, 1, 2));
+               WoodGeometry.faces[0].vertexColors[0]=new THREE.Color(0x925C0B);
+               WoodGeometry.faces[0].vertexColors[1]=new THREE.Color(0x462E0A);
+               WoodGeometry.faces[0].vertexColors[2]=new THREE.Color(0x73490B);
+               WoodGeometry.faces.push(new THREE.Face3(0, 2, 3));
+               WoodGeometry.faces[1].vertexColors[0]=new THREE.Color(0x925C0B);
+               WoodGeometry.faces[1].vertexColors[1]=new THREE.Color(0x73490B);
+               WoodGeometry.faces[1].vertexColors[2]=new THREE.Color(0x462E0A);
+
+               woodMesh=new THREE.Mesh(WoodGeometry,NormalMaterial)
+               woodMesh.position.set(2.75,-1.1,0);
+               scene.add(woodMesh);
+
+               let triangleGeometry = new THREE.Geometry();
+               triangleGeometry.vertices.push(new THREE.Vector3(0,  2.0, 0.0));
+               triangleGeometry.vertices.push(new THREE.Vector3(-1.5, 1.0, 0.0));
+               triangleGeometry.vertices.push(new THREE.Vector3( 1.5, 1.0, 0.0));
+               triangleGeometry.faces.push(new THREE.Face3(0, 1, 2));
+               triangleGeometry.faces[0].vertexColors[0] = new THREE.Color(0x9C3B1E);
+               triangleGeometry.faces[0].vertexColors[1] = new THREE.Color(0xAE553A);
+               triangleGeometry.faces[0].vertexColors[2] = new THREE.Color(0x91503C);
+
+               triangleMesh = new THREE.Mesh(triangleGeometry, NormalMaterial);
+               triangleMesh.position.set(-1.5, 0.0, 4.0);
+               scene.add(triangleMesh);
+
+               let squareGeometry = new THREE.Geometry();
+               squareGeometry.vertices.push(new THREE.Vector3(0,  0, 0));
+               squareGeometry.vertices.push(new THREE.Vector3(3,  0, 0));
+               squareGeometry.vertices.push(new THREE.Vector3(3,  3, 0));
+               squareGeometry.vertices.push(new THREE.Vector3(0,3,0));
+               squareGeometry.faces.push(new THREE.Face3(0, 1, 2));
+               squareGeometry.faces[0].vertexColors[0]= new THREE.Color(0x9C3B1E);
+               squareGeometry.faces[0].vertexColors[1]= new THREE.Color(0x9C3B1E);
+               squareGeometry.faces[0].vertexColors[2]= new THREE.Color(0x9C3B1E);
+			   squareGeometry.faces.push(new THREE.Face3(0, 2, 3));
+               squareGeometry.faces[1].vertexColors[0]= new THREE.Color(0x9C3B1E);
+               squareGeometry.faces[1].vertexColors[1]= new THREE.Color(0x9C3B1E);
+               squareGeometry.faces[1].vertexColors[2]= new THREE.Color(0x9C3B1E);
+
+               squareMesh = new THREE.Mesh(squareGeometry, NormalMaterial);
+               squareMesh.position.set(-4, -1.0, 0);
+               scene.add(squareMesh);
+
+               const doorMesh1 = new THREE.Mesh(WoodGeometry, NormalMaterial);
+               doorMesh1.position.set(-3,-0.9,0.1);
+               scene.add(doorMesh1);
+
+               const doorMesh2 = new THREE.Mesh(WoodGeometry, NormalMaterial);
+               doorMesh2.position.set(-2.4,-0.9,0.1);
+               scene.add(doorMesh2);
+
+               let carShape=new THREE.Shape();
+               carShape.moveTo(0,0)
+               carShape.lineTo(3,0)
+               carShape.lineTo(3,1)
+               carShape.lineTo(2,2)
+               carShape.lineTo(1,2)
+               carShape.lineTo(1,1)
+               carShape.lineTo(0,1)
+
+               let carMaterial =new THREE.MeshPhongMaterial({
+                   color: 0xF3FFE2,
+                   specular: 0xffffff,
+                   shininess: 1000,
+                   emissive:'blue',
+                   emissiveIntensity:0.5,
+               });
+
+               let wheelMaterial =new THREE.MeshPhongMaterial({
+                   color: 0xF3FFE2,
+                   specular: 0xffffff,
+                   shininess: 1000,
+                   emissive:'black',
+                   emissiveIntensity:0.5,
+               });
+
+               let wheelGeometry= new THREE.CylinderGeometry( 0.5, 0.5, 0.25, 9);
+
+               wheelMesh1=new THREE.Mesh(wheelGeometry,wheelMaterial);
+               wheelMesh1.rotation.set(Math.PI/2,0,0)
+               wheelMesh1.position.set(0.75,-1.5,2.1);
+               scene.add(wheelMesh1);
+
+               wheelMesh2=new THREE.Mesh(wheelGeometry,wheelMaterial);
+               wheelMesh2.rotation.set(Math.PI/2,0,0)
+               wheelMesh2.position.set(2.5,-1.5,2.1);
+               scene.add(wheelMesh2);
+
+               wheelMesh3=new THREE.Mesh(wheelGeometry,wheelMaterial);
+               wheelMesh3.rotation.set(Math.PI/2,0,0)
+               wheelMesh3.position.set(0.75,-1.5,1);
+               scene.add(wheelMesh3);
+
+               wheelMesh4=new THREE.Mesh(wheelGeometry,wheelMaterial);
+               wheelMesh4.rotation.set(Math.PI/2,0,0)
+               wheelMesh4.position.set(2.5,-1.5,1);
+               scene.add(wheelMesh4);
+
+               let extrudeSettings = {
+                   depth: 1,
+                   bevelEnabled: false
+               };
+
+               const geometry = new THREE.ExtrudeGeometry( carShape, extrudeSettings );
+
+               carMesh = new THREE.Mesh( geometry, carMaterial );
+
+               carMesh.position.set(0,-1.5,1);
+
+               scene.add(carMesh);
+
+           }
+
+           function animateScene(){
+               if(i>Math.PI){
+                   carMesh.rotation.set(Math.PI,0,Math.PI)
+                   wheelMesh1.position.set(10*Math.cos(i)-0.75,-1.5,1.1)
+                   wheelMesh2.position.set(10*Math.cos(i)-2.5,-1.5,1.1)
+                   wheelMesh3.position.set(10*Math.cos(i)-0.75,-1.5,0)
+                   wheelMesh4.position.set(10*Math.cos(i)-2.5,-1.5,0)
+               }
+               else{
+                   wheelMesh1.position.set(10*Math.cos(i)+0.75,-1.5,2.1)
+                   wheelMesh2.position.set(10*Math.cos(i)+2.5,-1.5,2.1)
+                   wheelMesh3.position.set(10*Math.cos(i)+0.75,-1.5,1)
+                   wheelMesh4.position.set(10*Math.cos(i)+2.5,-1.5,1)
+                   carMesh.rotation.set(0,0,0)
+               }
+               carMesh.position.x=10*Math.cos(i)
+               wheelMesh1.rotation.y=-Math.cos(i)*10
+               wheelMesh2.rotation.y=-Math.cos(i)*10
+               wheelMesh3.rotation.y=-Math.cos(i)*10
+               wheelMesh4.rotation.y=-Math.cos(i)*10
+               i=(i+0.01)%(2*Math.PI)
+               requestAnimationFrame(animateScene);
+               renderScene();
+           }
+
+           function renderScene(){
+               renderer.render(scene, camera);
+           }
+       </script>
+     </body>
+</html>
