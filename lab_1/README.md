@@ -2,9 +2,9 @@
 
 ## Preview
 
-<img width="100%" src="lab_1/1.gif">
-
-
+<div align="center">
+<img width="300px" src="/lab_1/1.gif">
+ </div>
 
 
 Witold Alda
