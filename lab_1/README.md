@@ -3,7 +3,7 @@
 ## Preview
 
 <div align="center">
-<img width="300px" src="/lab_1/1.gif">
+<img width="90%" src="/lab_1/1.gif">
  </div>
 
 
