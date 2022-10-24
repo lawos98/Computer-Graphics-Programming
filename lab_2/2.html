@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Lab 02.01 - Ambient and SpotLight</title>
+    <script type="text/javascript" src="three.js"></script>
+    <script type="text/javascript" src="jquery-1.9.0.js"></script>
+    <script type="text/javascript" src="stats.js"></script>
+    <script type="text/javascript" src="dat.gui.js"></script>
+	<script type="text/javascript" src="OrbitControls.js"></script>
+    <style>
+        body {
+            /* set margin to 0 and overflow to hidden, to go fullscreen */
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+<div id="Stats-output">
+</div>
+<!-- Div which will hold the Output -->
+<div id="WebGL-output">
+</div>
+
+<!-- Javascript code that runs our Three.js examples -->
+<script type="text/javascript">
+
+        function createLight(color,x,y,z,t){
+            const spotLight = new THREE.SpotLight(color);
+            spotLight.castShadow = true;
+            spotLight.position.set(x,y,z)
+            spotLight.target = t;
+
+            spotLight.angle = 0.30;
+            spotLight.penumbra = 0.7;
+            // const helper = new THREE.CameraHelper( spotLight.shadow.camera );
+            // scene.add( helper );
+            spotLight.shadow.camera.fov = 80;
+
+            spotLight.shadow.mapSize.width = 4096
+            spotLight.shadow.mapSize.height = 4096
+            spotLight.shadow.camera.near = 1.5
+            spotLight.shadow.camera.far = 100
+            spotLight.shadow.camera.left = -5000
+            spotLight.shadow.camera.right = 5000
+            spotLight.shadow.camera.top = -5000
+            spotLight.shadow.camera.bottom = 5000
+            spotLight.shadow.radius = 30
+            spotLight.shadow.blurSamples = 500
+
+            return spotLight
+        }
+
+    
+        const stats = initStats();
+
+        // create a scene, that will hold all our elements such as objects, cameras and lights.
+        const scene = new THREE.Scene();
+
+        // create a camera, which defines where we're looking at.
+        var camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+		
+
+        // create a render and set the size
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+
+        renderer.setClearColor(new THREE.Color(0x000000));  //background color and opacity
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;   // false is default
+		renderer.autoClear = true;          // default
+		renderer.autoClearColor = true;     // default
+        renderer.shadowMapSoft = true;
+		
+		ctr = new THREE.OrbitControls( camera, renderer.domElement);
+
+        // create the ground plane
+        const planeGeometry = new THREE.PlaneGeometry(100, 100,100,100);
+        const planeMaterial = new THREE.MeshLambertMaterial({color: 0xfffffff, side:THREE.DoubleSide});
+        const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+        plane.receiveShadow = true;
+
+        // rotate and position the plane
+        plane.rotation.x = -0.5 * Math.PI;
+        plane.position.x = 15
+        plane.position.y = 0
+        plane.position.z = 0
+
+        // add the plane to the scene
+        scene.add(plane);
+
+        // create a cube
+        const cubeGeometry = new THREE.CubeGeometry(4, 4, 4);
+        const cubeMaterial1 = new THREE.MeshPhongMaterial({color: 0x0000ff,shininess:100,specular:true});
+        const cubeMaterial2 = new THREE.MeshPhongMaterial({color: 0x00ff00,shininess:100,specular:true});
+        const cubeMaterial3 = new THREE.MeshPhongMaterial({color: 0xff0000,shininess:100,specular:true});
+        const cubeMaterial4 = new THREE.MeshPhongMaterial({color: 0xff00ff,shininess:100,specular:true});
+        const cube1 = new THREE.Mesh(cubeGeometry, cubeMaterial1);
+        const cube2 = new THREE.Mesh(cubeGeometry, cubeMaterial2);
+        const cube3 = new THREE.Mesh(cubeGeometry, cubeMaterial3);
+        const cube4 = new THREE.Mesh(cubeGeometry, cubeMaterial4);
+        cube1.castShadow = true;
+        cube2.castShadow = true;
+        cube3.castShadow = true;
+        cube4.castShadow = true;
+
+        // position the cube
+        cube1.position.set(6*Math.sqrt(2),5,6*Math.sqrt(2));
+        cube2.position.set(6*Math.sqrt(2),5,-6*Math.sqrt(2));
+        cube3.position.set(-6*Math.sqrt(2),5,-6*Math.sqrt(2));
+        cube4.position.set(-6*Math.sqrt(2),5,6*Math.sqrt(2));
+
+        // add the cube to the scene
+        scene.add(cube1);
+        scene.add(cube2);
+        scene.add(cube3);
+        scene.add(cube4);
+
+        const sphereGeometry = new THREE.SphereGeometry(4, 20, 20);
+        const sphereMaterial1 = new THREE.MeshPhongMaterial({color: 0x7777ff, specular:true, shininess:100,opacity: 0.7, transparent: true,});
+        const sphereMaterial2 = new THREE.MeshPhongMaterial({color: 0x77ff77, specular:true, shininess:100,opacity: 0.7, transparent: true,});
+        const sphereMaterial3 = new THREE.MeshPhongMaterial({color: 0xff7777, specular:true, shininess:100,opacity: 0.7, transparent: true,});
+        const sphereMaterial4 = new THREE.MeshPhongMaterial({color: 0xff77ff, specular:true, shininess:100,opacity: 0.7, transparent: true,});
+        const sphere1 = new THREE.Mesh(sphereGeometry, sphereMaterial1);
+        const sphere2 = new THREE.Mesh(sphereGeometry, sphereMaterial2);
+        const sphere3 = new THREE.Mesh(sphereGeometry, sphereMaterial3);
+        const sphere4 = new THREE.Mesh(sphereGeometry, sphereMaterial4);
+
+        // position the sphere
+        sphere1.position.set(-50,2,0)
+        sphere2.position.set(-25*Math.sqrt(2),2,-25*Math.sqrt(2))
+        sphere3.position.set(0,2,-50)
+        sphere4.position.set(25*Math.sqrt(2),2,-25*Math.sqrt(2))
+
+        // add the sphere to the scene
+        scene.add(sphere1);
+        scene.add(sphere2);
+        scene.add(sphere3);
+        scene.add(sphere4);
+
+        // position and point the camera to the center of the scene
+        camera.position.x = -25;
+        camera.position.y = 30;
+        camera.position.z = 25;
+        camera.lookAt(new THREE.Vector3(10, 0, 0));
+
+        // add subtle ambient lighting
+        const ambiColor = "#0c0c0c";
+        const ambientLight = new THREE.AmbientLight(ambiColor);
+        scene.add(ambientLight);
+
+        // add spotlight for the shadows
+        const spotLight1 = createLight(0x7777ff,-50,60,0,sphere1);
+        const spotLight2 = createLight(0x77ff77,-25*Math.sqrt(2),60,-25*Math.sqrt(2),sphere2);
+        const spotLight3 = createLight(0xff7777,0,60,-50,sphere3);
+        const spotLight4 = createLight(0xff77ff,25*Math.sqrt(2),60,-25*Math.sqrt(2),sphere4);
+
+        scene.add(spotLight1);
+        scene.add(spotLight2);
+        scene.add(spotLight3);
+        scene.add(spotLight4);
+
+        // add the output of the renderer to the html element
+        $("#WebGL-output").append(renderer.domElement);
+
+        // call the render function
+        let step = 0;
+
+        let controls = new function () {
+            this.rotationSpeed = 0.02;
+            this.bouncingSpeed = 0.03;
+            this.ambientColor = ambiColor;
+        }
+
+        const gui = new dat.GUI();
+        gui.addColor(controls, 'ambientColor').onChange(function (e) {
+            ambientLight.color = new THREE.Color(e);
+        });
+
+
+        render();
+
+        function render() {
+            stats.update();
+            // rotate the cube around its axes
+            cube1.rotation.x += controls.rotationSpeed;
+            cube1.rotation.y += controls.rotationSpeed;
+            cube1.rotation.z += controls.rotationSpeed;
+            cube2.rotation.x += controls.rotationSpeed;
+            cube2.rotation.y -= controls.rotationSpeed;
+            cube2.rotation.z += controls.rotationSpeed;
+            cube3.rotation.x -= controls.rotationSpeed;
+            cube3.rotation.y += controls.rotationSpeed;
+            cube3.rotation.z += controls.rotationSpeed;
+            cube4.rotation.x += controls.rotationSpeed;
+            cube4.rotation.y += controls.rotationSpeed;
+            cube4.rotation.z -= controls.rotationSpeed;
+
+            // cube1.position.y=
+
+            // bounce the sphere up and down
+            step += controls.bouncingSpeed;
+            sphere1.position.x = ( 20 * (Math.cos(step)));
+            spotLight1.position.x = ( 20 * (Math.cos(step)));
+            sphere1.position.y = 2 + ( 20 * Math.abs(Math.sin(step)));
+            spotLight1.position.y = 10 + ( 60 * Math.abs(Math.sin(step)));
+            sphere2.position.x = ( 10 *Math.sqrt(2)* (Math.cos(step+Math.PI/4)));
+            spotLight2.position.x = ( 10 *Math.sqrt(2)* (Math.cos(step+Math.PI/4)));
+            sphere2.position.y = 2 + ( 20 * Math.abs(Math.sin(step+Math.PI/4)));
+            spotLight2.position.y = 10 + ( 60 * Math.abs(Math.sin(step+Math.PI/4)));
+            sphere2.position.z = ( 10 *Math.sqrt(2)* (Math.cos(step+Math.PI/4)));
+            spotLight2.position.z = ( 10 *Math.sqrt(2)* (Math.cos(step+Math.PI/4)));
+            sphere3.position.y = 2 + ( 20 * Math.abs(Math.sin(step+Math.PI/2)));
+            spotLight3.position.y = 10 + ( 60 * Math.abs(Math.sin(step+Math.PI/2)));
+            sphere3.position.z = ( 20 * (Math.cos(step+Math.PI/2)));
+            spotLight3.position.z = ( 20 * (Math.cos(step+Math.PI/2)));
+            sphere4.position.x = ( 10 *Math.sqrt(2)* (-Math.cos(step+3*Math.PI/4)));
+            spotLight4.position.x = ( 10 *Math.sqrt(2)* (-Math.cos(step+3*Math.PI/4)));
+            sphere4.position.y = 2 + ( 20 * Math.abs(Math.sin(step+3*Math.PI/4)));
+            spotLight4.position.y = 10 + ( 60 * Math.abs(Math.sin(step+3*Math.PI/4)));
+            sphere4.position.z = ( 10 *Math.sqrt(2)* (Math.cos(step+3*Math.PI/4)));
+            spotLight4.position.z = ( 10 *Math.sqrt(2)* (Math.cos(step+3*Math.PI/4)));
+
+            // render using requestAnimationFrame
+            requestAnimationFrame(render);
+            renderer.render(scene, camera);
+        }
+
+        function initStats() {
+
+            const stats = new Stats();
+
+            stats.setMode(0); // 0: fps, 1: ms
+
+            // Align top-left
+            stats.domElement.style.position = 'absolute';
+            stats.domElement.style.left = '0px';
+            stats.domElement.style.top = '0px';
+
+            $("#Stats-output").append(stats.domElement);
+
+            return stats;
+        }
+  
+
+
+</script>
+</body>
+</html>
