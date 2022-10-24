@@ -17,7 +17,7 @@ AGH WIET course for Introduction to computer graphics programming
 ## List
 
 1. [Drawing](lab_1)
-2. [TODO](lab_2)
+2. [Lighting](lab_2)
 3. [TODO](lab_3)
 4. [TODO](lab_4)
 5. [TODO](lab_5)
