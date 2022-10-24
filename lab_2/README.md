@@ -1,5 +1,11 @@
 # Grafika komputerowa. Laboratorium 2.
 
+## Preview
+
+<div align="center">
+<img width="60%" src="/lab_2/2.gif">
+</div>
+
 # Oświetlenie w Three.js (release 97)
 
 ## Elementy biblioteki three.js (krótkie przypomnienie)
